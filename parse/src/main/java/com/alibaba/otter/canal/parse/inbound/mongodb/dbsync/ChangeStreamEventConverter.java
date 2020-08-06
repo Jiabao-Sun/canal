@@ -47,8 +47,8 @@ public class ChangeStreamEventConverter extends AbstractCanalLifeCycle implement
     private volatile AviaterRegexFilter nameFilter;
     private volatile AviaterRegexFilter nameBlackFilter;
 
-    private Map<String, List<String>>   fieldFilterMap             = new HashMap<>();
-    private Map<String, List<String>>   fieldBlackFilterMap        = new HashMap<>();
+    private Map<String, List<String>>   fieldFilterMap             = new HashMap<String, List<String>>();
+    private Map<String, List<String>>   fieldBlackFilterMap        = new HashMap<String, List<String>>();
 
     @Override
     public CanalEntry.Entry parse(ChangeStreamEvent logEvent, boolean isSeek) throws CanalParseException {
@@ -424,11 +424,28 @@ public class ChangeStreamEventConverter extends AbstractCanalLifeCycle implement
     }
 
     public void setFieldFilterMap(Map<String, List<String>> fieldFilterMap) {
-        this.fieldFilterMap = fieldFilterMap;
+        if (fieldFilterMap != null) {
+            this.fieldFilterMap = fieldFilterMap;
+        } else {
+            this.fieldFilterMap = new HashMap<String, List<String>>();
+        }
+
+
+        for (Map.Entry<String, List<String>> entry : this.fieldFilterMap.entrySet()) {
+            logger.warn("--> init field filter : " + entry.getKey() + "->" + entry.getValue());
+        }
     }
 
     public void setFieldBlackFilterMap(Map<String, List<String>> fieldBlackFilterMap) {
-        this.fieldBlackFilterMap = fieldBlackFilterMap;
+        if (fieldBlackFilterMap != null) {
+            this.fieldBlackFilterMap = fieldBlackFilterMap;
+        } else {
+            this.fieldBlackFilterMap = new HashMap<String, List<String>>();
+        }
+
+        for (Map.Entry<String, List<String>> entry : this.fieldBlackFilterMap.entrySet()) {
+            logger.warn("--> init field black filter : " + entry.getKey() + "->" + entry.getValue());
+        }
     }
 
     public void setNameFilter(AviaterRegexFilter nameFilter) {
